@@ -74,5 +74,5 @@ end
 # |> Ash.Changeset.for_update(:close) \
 # |> Ash.update!()
 
-# closed_ticket |> Ash.Changeset.for_update(:close) \
-# |> Ash.update!()
+# Ash.read!(Helpdesk.Support.Ticket)
+# and read error message
