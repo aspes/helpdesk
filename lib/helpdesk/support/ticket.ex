@@ -2,7 +2,7 @@
 
 defmodule Helpdesk.Support.Ticket do
   # This turns this module into a resource
-  use Ash.Resource, domain: Helpdesk.Support
+  use Ash.Resource, domain: Helpdesk.Support, data_layer: Ash.DataLayer.Ets
 
   actions do
     # Use the default implementation of the :read action
@@ -75,4 +75,3 @@ end
 # |> Ash.update!()
 
 # Ash.read!(Helpdesk.Support.Ticket)
-# and read error message
