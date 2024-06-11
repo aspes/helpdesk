@@ -12,6 +12,21 @@ defmodule Helpdesk.Support.Ticket do
     create :open do
       accept [:subject]
     end
+
+    update :close do
+      # We don't want to accept any input here
+      accept []
+
+      validate attribute_does_not_equal(:status, :closed) do
+        message "Ticket is already closed"
+      end
+
+      change set_attribute(:status, :closed)
+      # A custom change could be added like so:
+      #
+      # change MyCustomChange
+      # change {MyCustomChange, opt: :val}
+    end
   end
 
   # Attributes are the simple pieces of data that exist on your resource
@@ -46,10 +61,18 @@ defmodule Helpdesk.Support.Ticket do
   end
 end
 
-# CREATE ASH RESOURCE
-# Use this to pick up changes you've made to your code, or restart your session
+# iex -S mix
+# Updates and validations
+
 # recompile()
 
-# Helpdesk.Support.Ticket
-# |> Ash.Changeset.for_create(:open, %{subject: "My mouse won't click!"})
+# ticket = Helpdesk.Support.Ticket \
+# |> Ash.Changeset.for_create(:open, %{subject: "My mouse won't click!"}) \
 # |> Ash.create!()
+
+# closed_ticket = ticket \
+# |> Ash.Changeset.for_update(:close) \
+# |> Ash.update!()
+
+# closed_ticket |> Ash.Changeset.for_update(:close) \
+# |> Ash.update!()
