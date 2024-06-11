@@ -9,7 +9,9 @@ defmodule Helpdesk.Support.Ticket do
     defaults [:read]
 
     # and a create action, which we'll customize later
-    create :create
+    create :open do
+      accept [:subject]
+    end
   end
 
   # Attributes are the simple pieces of data that exist on your resource
@@ -18,14 +20,36 @@ defmodule Helpdesk.Support.Ticket do
     uuid_primary_key :id
 
     # Add a string type attribute called `:subject`
-    attribute :subject, :string
+    attribute :subject, :string do
+      # Don't allow `nil` values
+      allow_nil? false
+
+      # Allow this attribute to be public. By default, all attributes are private.
+      public? true
+    end
+
+    # status is either `open` or `closed`. We can add more statuses later
+    attribute :status, :atom do
+      # Constraints allow you to provide extra rules for the value.
+      # The available constraints depend on the type
+      # See the documentation for each type to know what constraints are available
+      # Since atoms are generally only used when we know all of the values
+      # it provides a `one_of` constraint, that only allows those values
+      constraints one_of: [:open, :closed]
+
+      # The status defaulting to open makes sense
+      default :open
+
+      # We also don't want status to ever be `nil`
+      allow_nil? false
+    end
   end
 end
 
 # CREATE ASH RESOURCE
+# Use this to pick up changes you've made to your code, or restart your session
+# recompile()
 
 # Helpdesk.Support.Ticket
-# |> Ash.Changeset.for_create(:create)
+# |> Ash.Changeset.for_create(:open, %{subject: "My mouse won't click!"})
 # |> Ash.create!()
-# or,
-# Ash.Changeset.for_create(Helpdesk.Support.Ticket, :create) |> Ash.create!()
