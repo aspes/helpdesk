@@ -71,6 +71,11 @@ defmodule Helpdesk.Support.Ticket do
     # We create `representative_id` automatically.
     belongs_to :representative, Helpdesk.Support.Representative
   end
+
+  code_interface do
+    define(:open, args: [:subject])
+    define(:assign, args: [:representative_id])
+  end
 end
 
 # iex -S mix

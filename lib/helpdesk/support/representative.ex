@@ -33,29 +33,23 @@ defmodule Helpdesk.Support.Representative do
     # on the module name of this resource and that the source attribute is `id`.
     has_many :tickets, Helpdesk.Support.Ticket
   end
+
+  code_interface do
+    define(:create, args: [:name])
+  end
 end
 
 """
-RELATIONSHIP TEST
+RELATIONSHIP TEST iwht code_interface
 -----------------
 
 recompile()
 
-ticket = (
-  Helpdesk.Support.Ticket
-  |> Ash.Changeset.for_create(:open, %{subject: "I can't find my hand!"})
-  |> Ash.create!()
-)
+{:ok, joe} = Helpdesk.Support.Representative.create("Joe Armstrong")
 
-representative = (
-  Helpdesk.Support.Representative
-  |> Ash.Changeset.for_create(:create, %{name: "Joe Armstrong"})
-  |> Ash.create!()
-)
+{:ok, ticket} = Helpdesk.Support.Ticket.open("hello world subject")
 
-ticket
-|> Ash.Changeset.for_update(:assign, %{representative_id: representative.id})
-|> Ash.update!()
+Helpdesk.Support.Ticket.assign(ticket, joe.id)
 
-Ash.load!(representative, [:tickets])
+Ash.load!(joe, [:tickets])
 """
