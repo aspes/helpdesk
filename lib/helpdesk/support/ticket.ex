@@ -59,6 +59,14 @@ defmodule Helpdesk.Support.Ticket do
       allow_nil? false
     end
   end
+
+  relationships do
+    # belongs_to means that the destination attribute is unique, meaning only one related record could exist.
+    # We assume that the destination attribute is `representative_id` based
+    # on the name of this relationship and that the source attribute is `representative_id`.
+    # We create `representative_id` automatically.
+    belongs_to :representative, Helpdesk.Support.Representative
+  end
 end
 
 # iex -S mix
