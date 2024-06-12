@@ -34,3 +34,28 @@ defmodule Helpdesk.Support.Representative do
     has_many :tickets, Helpdesk.Support.Ticket
   end
 end
+
+"""
+RELATIONSHIP TEST
+-----------------
+
+recompile()
+
+ticket = (
+  Helpdesk.Support.Ticket
+  |> Ash.Changeset.for_create(:open, %{subject: "I can't find my hand!"})
+  |> Ash.create!()
+)
+
+representative = (
+  Helpdesk.Support.Representative
+  |> Ash.Changeset.for_create(:create, %{name: "Joe Armstrong"})
+  |> Ash.create!()
+)
+
+ticket
+|> Ash.Changeset.for_update(:assign, %{representative_id: representative.id})
+|> Ash.update!()
+
+Ash.load!(representative, [:tickets])
+"""
